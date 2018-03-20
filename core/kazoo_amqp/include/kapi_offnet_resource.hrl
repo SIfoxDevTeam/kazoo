@@ -48,6 +48,7 @@
 -define(KEY_T38_ENABLED, <<"Fax-T38-Enabled">>).
 -define(KEY_TIMEOUT, <<"Timeout">>).
 -define(KEY_TO_DID, <<"To-DID">>).
+-define(KEY_CALL_RESTRICTIONS_ENABLED, <<"Call-Restrictions-Enabled">>).
 
 -define(RESOURCE_TYPE_AUDIO, <<"audio">>).
 -define(RESOURCE_TYPE_ORIGINATE, <<"originate">>).

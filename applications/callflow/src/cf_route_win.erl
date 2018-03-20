@@ -101,15 +101,19 @@ maybe_closed_group_restriction(JObj, Call) ->
 -spec maybe_classification_restriction(kz_json:object(), kapps_call:call()) ->
                                               boolean().
 maybe_classification_restriction(JObj, Call) ->
-    Request = find_request(Call),
-    AccountId = kapps_call:account_id(Call),
+    CallRestriction = kz_json:get_value(<<"call_restriction">>, JObj),
+    Fun = fun({_, Action}) -> kz_json:get_value(<<"action">>, Action) =:= <<"deny">> end,
+    Denied = kz_json:filter(Fun, CallRestriction),
+    Call1 = kapps_call:kvs_store('call_restrictions_enabled', Denied, Call),
+    Request = find_request(Call1),
+    AccountId = kapps_call:account_id(Call1),
     DialPlan = kz_json:get_json_value(<<"dial_plan">>, JObj, kz_json:new()),
     Number = knm_converters:normalize(Request, AccountId, DialPlan),
     Classification = knm_converters:classify(Number),
     lager:debug("classified number ~s as ~s, testing for call restrictions"
                ,[Number, Classification]
                ),
-    kz_json:get_value([<<"call_restriction">>, Classification, <<"action">>], JObj) =:= <<"deny">>.
+    kz_json:get_value([Classification, <<"action">>], CallRestriction) =:= <<"deny">>.
 
 -spec find_request(kapps_call:call()) -> kz_term:ne_binary().
 find_request(Call) ->

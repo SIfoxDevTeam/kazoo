@@ -53,6 +53,7 @@
         ,timeout/1, timeout/2
         ,t38_enabled/1, t38_enabled/2
         ,to_did/1, to_did/2
+        ,call_restrictions_enabled/1, call_restrictions_enabled/2
 
         ,msg_id/1
         ,server_id/1
@@ -334,6 +335,14 @@ to_did(Req) ->
 -spec to_did(req(), Default) -> kz_term:ne_binary() | Default.
 to_did(?REQ_TYPE(JObj), Default) ->
     kz_json:get_ne_value(?KEY_TO_DID, JObj, Default).
+
+-spec call_restrictions_enabled(req()) -> kz_term:api_binary().
+call_restrictions_enabled(Req) ->
+    call_restrictions_enabled(Req, 'undefined').
+
+-spec call_restrictions_enabled(req(), Default) -> kz_term:ne_binary() | Default.
+call_restrictions_enabled(?REQ_TYPE(JObj), Default) ->
+    kz_json:get_ne_value(?KEY_CALL_RESTRICTIONS_ENABLED, JObj, Default).
 
 -spec call_id(req()) -> kz_term:api_binary().
 call_id(Req) ->
